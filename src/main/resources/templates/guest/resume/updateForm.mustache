@@ -5,7 +5,7 @@
 <div class="container ">
     <form action="/guest/resume/{{resume.id}}/update" method="post" enctype="application/x-www-form-urlencoded">
         <div>
-            <input class="mb-3" type="text" name="resumeTitle" id="" placeholder="이력서 제목" value="{{resume.resumeTitle}}"
+            <input class="mb-3" type="text" name="resumeTitle" id="" placeholder="이력서 제목"
                    style="font-size: 30px; border-radius: 5px; width: 100%;">
         </div>
         <div class="card mb-2">
@@ -13,32 +13,67 @@
                 <h5 class="card-header">인적사항</h5>
             </div>
             <div class="card-body row">
-                <div class="col-sm-3">
-                    <img src="/images/userImage.jpg" width="150" height="200" style="margin-left: 70px;">
-                </div>
-                <div class="col-sm-9">
-                    <table class="table">
-                        <tbody style="font-size: 15px;">
-                        <tr>
-                            <th>이름</th>
-                            <td>{{user.name}}</td>
-                            <th>나이</th>
-                            <td>{{user.age}}</td>
-                        </tr>
-                        <tr>
-                            <th>이메일</th>
-                            <td>{{user.email}}</td>
-                            <th>핸드폰</th>
-                            <td>{{user.phone}}</td>
-                        </tr>
-                        <tr>
-                            <th>주소</th>
-                            <td colspan="3">{{user.address}}</td>
-                        </tr>
+                <img id="imgPreview" src="#" alt="미리보기 이미지"
+                     style="width: 120px; height: 175px; border: 1px solid #ccc; margin-left: 200px;">
+                <input type="file" name="imgFile" id="imgFile" style="margin-left: 188px; margin-top: 5px;">
+            </div>
 
-                        </tbody>
-                    </table>
-                </div>
+            <script>
+                const imgFileInput = document.getElementById('imgFile');
+                const imgPreview = document.getElementById('imgPreview');
+                const uploadBtn = document.getElementById('uploadBtn');
+
+                imgFileInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    const reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        imgPreview.src = e.target.result;
+                    }
+
+                    reader.readAsDataURL(file);
+                });
+
+                uploadBtn.addEventListener('click', function() {
+                    const formData = new FormData();
+                    const file = imgFileInput.files[0];
+                    formData.append('imgFile', file);
+
+                    fetch('/upload', {
+                        method: 'POST',
+                        body: formData
+                    })
+                            .then(response => response.json())
+                            .then(data => {
+                                // 업로드가 성공하면 미리보기 이미지를 업데이트하거나 다른 작업을 수행합니다.
+                                console.log('업로드가 완료되었습니다.');
+                            })
+                            .catch(error => {
+                                console.error('업로드 중 오류가 발생했습니다:', error);
+                            });
+                });
+            </script>
+            <div class="col-md-6">
+                <table class="table table-bordered" style=" margin-left: 450px; margin-top: -180px;">
+                    <tbody style="font-size: 15px;">
+                    <tr>
+                        <th>이름</th>
+                        <td>{{user.name}}</td>
+                        <th>나이</th>
+                        <td>{{user.age}}</td>
+                    </tr>
+                    <tr>
+                        <th>이메일</th>
+                        <td>{{user.email}}</td>
+                        <th>핸드폰</th>
+                        <td>{{user.phone}}</td>
+                    </tr>
+                    <tr>
+                        <th>주소</th>
+                        <td colspan="3">{{user.address}}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="card mb-2">
@@ -60,37 +95,37 @@
             <div class="row m-2">
                 <div class="col-sm-2">
                     <div class="form-check">
-                        <input type="checkbox" name="skills" class="form-check-input" value="java">
+                        <input type="checkbox" name="skills" class="form-check-input" value="Java">
                         <div>Java</div>
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-check">
-                        <input type="checkbox" name="skills" class="form-check-input" value="javascript">
+                        <input type="checkbox" name="skills" class="form-check-input" value="JavaScript">
                         <div>JavaScript</div>
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-check">
-                        <input type="checkbox" name="skills" class="form-check-input" value="spring">
+                        <input type="checkbox" name="skills" class="form-check-input" value="Spring">
                         <div>Spring</div>
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-check">
-                        <input type="checkbox" name="skills" class="form-check-input" value="html">
+                        <input type="checkbox" name="skills" class="form-check-input" value="HTML">
                         <div>HTML</div>
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-check">
-                        <input type="checkbox" name="skills" class="form-check-input" value="jquery">
+                        <input type="checkbox" name="skills" class="form-check-input" value="jQuery">
                         <div>jQuery</div>
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-check">
-                        <input type="checkbox" name="skills" class="form-check-input" value="mysql">
+                        <input type="checkbox" name="skills" class="form-check-input" value="MySQL">
                         <div>MySQL</div>
                     </div>
                 </div>
@@ -136,12 +171,12 @@
         <div class="card mb-2">
             <div>
                 <h5 class="card-header">자기소개서</h5>
-                <textarea class="form-control" rows="5" id="comment" name="content">{{resume.content}}</textarea>
+                <textarea class="form-control" rows="5" id="comment" name="content"></textarea>
             </div>
         </div>
         <br>
         <div class="d-flex justify-content-center">
-            <button type="submit" class=" btn btn-primary btn-lg">수정완료</button>
+            <button type="submit" class=" btn btn-primary btn-lg">작성완료</button>
         </div>
     </form>
 
